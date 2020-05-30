@@ -99,44 +99,74 @@ You have to create an input file containing information about orders and cooks
 The Input File Format
 
 
-Line 1	N	G	V
+Line 1	
+N	G	V
 the number of cooks of different types (Normal, veGan, VIP)
-Line 2	SN_min	SN_max 	SG_min	SG_max	SV_min	SV_max
+
+Line 2	
+SN_min	SN_max 	SG_min	SG_max	SV_min	SV_max
 The speed range (min & max) of each cook type
-Line 3	BO	BN_min	BN_max	BG_min	BG_max	BV_min	BV_max
+
+Line 3	
+BO	BN_min	BN_max	BG_min	BG_max	BV_min	BV_max
 BO: the number of orders a cook must prepare before taking a break
 Then the break range (mix & max) of each cook type
-Line 4	InjProp	RstPrd
+
+Line 4	
+InjProp	RstPrd
 The probability a busy cook gets injured and the rest period respectively
-Line 5	AutoP		VIP_WT
+
+Line 5	
+AutoP		VIP_WT
 AutoP: the number of ticks after which an order is automatically promoted to VIP
 VIP_WT: the number of ticks after which a VIP order is considered urgent
-Line 6	M: the number of events in this file
-Next
-M
-Lines	Each line represents and event. An event can be:
+
+Line 6	
+M: the number of events in this file
+
+Next M Lines	Each line represents and event. An event can be:
+
 ●	Arrival of a new order. Denoted by letter R, or
+
 ●	Cancellation of an existing order. Denoted by letter X, or
+
 ●	Promotion of an order to be a VIP order. Denoted by letter P.
 
 The lines of all events are sorted by the event time (TS) in ascending order.
+
 Information about events format :
 =
+
 •	Arrival event line have the following info
+
 	R(letter R in the beginning of its line) means an arrival event
+
 	TYP is the order type (N: normal, G: vegan, V: VIP).
+
 	TS is the event timestep. (order arrival time)
+
 	ID is a unique sequence number that identifies each order.
+
 	SIZE is the number of dishes of the order
+
 	MONY is the total order money. 
+
 •	Cancellation event line have the following info
+
 	X(Letter X) means an order cancellation event
+
 	TS is the event timestep.
+
 	ID is the id of the order to be canceled. This ID must be of a Normal order.
+
 •	Promotion event line have the following info
+
 	P(Letter P) means an order promotion event occurring
+
 	TS is the event timestep.
+
 	ID is the id of the order to be promoted to be VIP. It must be of a Normal order.
+
 	ExMony if the extra money the customer paid for promotion.
 
 The project has six sample input files and their output 
