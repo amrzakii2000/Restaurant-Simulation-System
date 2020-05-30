@@ -79,10 +79,14 @@ Notes: If the orders of a specific type cannot be serviced in the current time s
 GUI Information:
 =
 -The upper left section : has the arrived waiting orders (Normal orders are in red, Vegan Orders are in blue and VIP in pink) sorted by arrival time
+
 -The lower right section : contains the orders that are assigned to cooks and are being served sorted by serving timestep
-- The lower left corner: contains the IDs of 
+
+- The lower left corner: contains the IDs of finished orders
+
 -The upper right corner: contains cooks IDs sorted by availability.
-=======================================
+
+
 
 
 --------------------------------------------------------
