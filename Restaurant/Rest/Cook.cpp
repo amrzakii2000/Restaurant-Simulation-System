@@ -52,6 +52,7 @@ void Cook::setSpeed(int cSpeed)
 {
 	speed = cSpeed > 0 ? cSpeed : 0;
 	RemainedDishes = speed;
+	OriginalSpeed = speed;
 }
 int Cook::getSpeed() const
 {
@@ -134,7 +135,7 @@ void Cook::setInjured()
 void Cook::setRecovered()
 {
 	injured = false;
-	speed==1?speed:speed*=2;
+	speed = OriginalSpeed;
 }
 bool Cook::isInjured()
 {

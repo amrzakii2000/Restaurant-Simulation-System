@@ -36,7 +36,7 @@ private:
 	LinkedList<Cook*>InServiceCooks; // List of cooks in Service
 	LinkedList<Cook*>InBreakCooks; // List of cooks in break
 	LinkedList<Cook*> RestingCooks; // Injured cooks receiving medication
-
+	string FileName;
 								//
 								// TODO: Add More Data Members As Needed
 								//

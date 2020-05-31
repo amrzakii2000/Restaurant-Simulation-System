@@ -40,6 +40,75 @@ void Restaurant::RunSimulation()
 		VipToUrgent(CurrentTimeStep);
 		CooksInjured();
 		CookInService(CurrentTimeStep);
+		while (!UrgentOrdersQ.isEmpty())
+		{
+			if (!NormalCooks.isEmpty() || !VeganCooks.isEmpty() || !VipCooks.isEmpty() || !InBreakCooks.isEmpty() || !RestingCooks.isEmpty())
+			{
+				UrgentOrdersQ.dequeue(pOrd);
+				InServiceList.InsertEnd(pOrd);
+				if (!VipCooks.isEmpty())
+				{
+					VipCooks.dequeue(pCook);
+					AvailableVipCooks--;
+					AssignOrder(pCook, pOrd, CurrentTimeStep);
+					ServedLast.enqueue("V" + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
+					WaitVipOrders--;
+					NoSRVvip++;
+				}
+				else if (!NormalCooks.isEmpty())
+				{
+					NormalCooks.dequeue(pCook);
+					AvailableNormalCooks--;
+					AssignOrder(pCook, pOrd, CurrentTimeStep);
+					ServedLast.enqueue("N" + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
+					WaitVipOrders--;
+					NoSRVvip++;
+				}
+				else if (!VeganCooks.isEmpty())
+				{
+					VeganCooks.dequeue(pCook);
+					AvailableVeganCooks--;
+					AssignOrder(pCook, pOrd, CurrentTimeStep);
+					ServedLast.enqueue("G" + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
+					WaitVipOrders--;
+					NoSRVvip++;
+				}
+				else if (!InBreakCooks.isEmpty())
+				{
+					InBreakCooks.removeFirst(pCook);
+					AssignOrder(pCook, pOrd, CurrentTimeStep);
+					ORD_TYPE type = pCook->GetType();
+					string T;
+					if (type == TYPE_NRM)
+						T = "N";
+					else if (type == TYPE_VGAN)
+						T = "G";
+					else if (type == TYPE_VIP)
+						T = "V";
+					ServedLast.enqueue(T + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
+					WaitVipOrders--;
+					NoSRVvip++;
+				}
+				else if (!RestingCooks.isEmpty())
+				{
+					RestingCooks.removeFirst(pCook);
+					AssignOrder(pCook, pOrd, CurrentTimeStep);
+					ORD_TYPE type = pCook->GetType();
+					string T;
+					if (type == TYPE_NRM)
+						T = "N";
+					else if (type == TYPE_VGAN)
+						T = "G";
+					else if (type == TYPE_VIP)
+						T = "V";
+					ServedLast.enqueue(T + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
+					WaitVipOrders--;
+					NoSRVvip++;
+				}
+			}
+			else
+				break;
+		}
 		while (!VipOrdersQ.isEmpty())
 		{
 			if (!VipCooks.isEmpty() || !NormalCooks.isEmpty() || !VeganCooks.isEmpty())
@@ -121,75 +190,7 @@ void Restaurant::RunSimulation()
 			else
 				break;
 		}
-		while (!UrgentOrdersQ.isEmpty())
-		{
-			if (!NormalCooks.isEmpty() || !VeganCooks.isEmpty() || !VipCooks.isEmpty() || !InBreakCooks.isEmpty() || !RestingCooks.isEmpty())
-			{
-				UrgentOrdersQ.dequeue(pOrd);
-				InServiceList.InsertEnd(pOrd);
-				if (!VipCooks.isEmpty())
-				{
-					VipCooks.dequeue(pCook);
-					AvailableVipCooks--;
-					AssignOrder(pCook, pOrd, CurrentTimeStep);
-					ServedLast.enqueue("V" + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
-					WaitVipOrders--;
-					NoSRVvip++;
-				}
-				else if (!NormalCooks.isEmpty())
-				{
-					NormalCooks.dequeue(pCook);
-					AvailableNormalCooks--;
-					AssignOrder(pCook, pOrd, CurrentTimeStep);
-					ServedLast.enqueue("N" + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
-					WaitVipOrders--;
-					NoSRVvip++;
-				}
-				else if (!VeganCooks.isEmpty())
-				{
-					VeganCooks.dequeue(pCook);
-					AvailableVeganCooks--;
-					AssignOrder(pCook, pOrd, CurrentTimeStep);
-					ServedLast.enqueue("G" + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
-					WaitVipOrders--;
-					NoSRVvip++;
-				}
-				else if (!InBreakCooks.isEmpty())
-				{
-					InBreakCooks.removeFirst(pCook);
-					AssignOrder(pCook, pOrd, CurrentTimeStep);
-					ORD_TYPE type = pCook->GetType();
-					string T;
-					if (type == TYPE_NRM)
-						T = "N";
-					else if (type == TYPE_VGAN)
-						T = "G";
-					else if (type == TYPE_VIP)
-						T = "V";
-					ServedLast.enqueue(T + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
-					WaitVipOrders--;
-					NoSRVvip++;
-				}
-				else if (!RestingCooks.isEmpty())
-				{
-					RestingCooks.removeFirst(pCook);
-					AssignOrder(pCook, pOrd, CurrentTimeStep);
-					ORD_TYPE type = pCook->GetType();
-					string T;
-					if (type == TYPE_NRM)
-						T = "N";
-					else if (type == TYPE_VGAN)
-						T = "G";
-					else if (type == TYPE_VIP)
-						T = "V";
-					ServedLast.enqueue(T + to_string(pCook->GetID()) + "(V" + to_string(pOrd->GetID()) + ")");
-					WaitVipOrders--;
-					NoSRVvip++;
-				}
-			}
-			else
-				break;
-		}
+		
 		if (mode == MODE_INTR || mode == MODE_STEP) // interactive or step by step
 		{
 			FillDrawingList();
@@ -359,7 +360,7 @@ Order* Restaurant::getOrderbyID(int oID, ORD_TYPE type)
 
 void Restaurant::ReadInputFile()
 {
-	string FileName;
+	
 	pGUI->PrintMessage("Please Enter Input File Name: ");
 	FileName = pGUI->GetString(); // read file nme from the user
 	FileName = FileName + ".txt";
@@ -941,10 +942,8 @@ int Restaurant::VipToUrgent(int CurrentTimestep)
 
 void Restaurant::OutputFile()
 {
-	string filename;
-	pGUI->PrintMessage("Enter the Output file name: ");
-	filename = pGUI->GetString();
-	ofstream out(filename+".txt");
+	
+	ofstream out("Out_"+FileName+".txt");
 	out << "FT\tID\tAT\tWT\tST\n";
 	Order* Ord = nullptr;
 	int total = FinishedOrdersQ.getSize();

@@ -16,6 +16,7 @@ class Cook
 	bool isAvailable;				// State of Cook
 	int RemainedDishes; // numbers of remained dishes a cook can still serve in this timestep
 	int RestPeriod;
+	int OriginalSpeed;
 public:
 	Cook();
 	Cook(int cID, ORD_TYPE cType, int cSpeed, int cBreakDuration, int cOrdersBreak);
